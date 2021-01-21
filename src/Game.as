@@ -22,6 +22,9 @@ package
 	import starling.text.TextField;
 	import starling.utils.deg2rad;
 	import starling.core.Starling;
+	
+	import starling.textures.Texture;
+	import flash.display.Bitmap;
 	/**
 	 * ...
 	 * @author Vendrie
@@ -40,26 +43,29 @@ package
 		
 		private var wood:Image;
 		private var _rotationInDegrees:Number = 0;
-		private var woodObject : DisplayObject;
+		
+		
+		[Embed(source="../bin/image/wood.png")]
+		public static const woodClass:Class;
+		
+		[Embed(source="../bin/image/knife.png")]
+		public static const knifeClass:Class;
 
 		public function Game()
 		{
-			var appDir:File = File.applicationDirectory;
+			//var appDir:File = File.applicationDirectory;
 			//SET ASSETS MANAGER
 
-			assetsManager = new AssetManager();
-			assetsManager.enqueue(appDir.resolvePath("image"));
+			//assetsManager = new AssetManager();
+			//assetsManager.enqueue(appDir.resolvePath("image"));
 
-			assetsManager.loadQueue(startGame);
+			//assetsManager.loadQueue(startGame);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
-
 		}
 		
 		private function startGame():void
 		{
-			//wood = new Image(assetsManager.getTexture("wood"));
-			//wood.width = 200;
-			//wood.height = 200;
+			
 			//
 			//s = new Sprite();
 			//s.x = 490;
@@ -70,7 +76,7 @@ package
 			//addChild(s);
 			
 			//this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
-			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
+			//this.addEventListener(EnterFrameEvent.ENTER_FRAME, onAdded);
 		}
 		
 		private function onAdded(e:Event):void
@@ -93,13 +99,33 @@ package
 			////s.y = (stage.stageHeight - s.height >> 1) + (s.height >> 1);
 			
 			
-			q = new Quad(200, 200);
+			
+			var bmpWood:Bitmap = new woodClass();
+			var texWood:Texture = Texture.fromBitmap(bmpWood);
+			var wood:Image = new Image(texWood);
+			
+			var bmpKnife:Bitmap = new knifeClass();
+			var texKnife:Texture = Texture.fromBitmap(bmpKnife);
+			var knife:Image = new Image(texKnife);
+			
+			knife.pivotY = knife.height;
+			knife.height = 120;
+			knife.width = 80;
+			knife.x = 450;
+			knife.y = 600;
+			
+			addChild(knife);
+			
+			//wood = new Image(assetsManager.getTexture("wood"));
+			wood.width = 200;
+			wood.height = 200;
+			
 			s = new Sprite();
-			s.addChild(q);
+			s.addChild(wood);
 			s.pivotX = s.width >> 1;
 			s.pivotY = s.height >> 1;
 			s.x = (stage.stageWidth - s.width >> 1 ) + (s.width >> 1);
-			s.y = (stage.stageHeight - s.height >> 1) + (s.height >> 1);
+			s.y = 100;
 			addChild(s);
 			
 			s.addEventListener(Event.ENTER_FRAME, onFrame);
@@ -108,7 +134,7 @@ package
 		
 		private function onFrame(e:Event):void
 		{
-			(e.currentTarget as DisplayObject).rotation += 0.1;
+			(e.currentTarget as DisplayObject).rotation += 0.8 * Math.PI / 90;
 		}
 		
 
