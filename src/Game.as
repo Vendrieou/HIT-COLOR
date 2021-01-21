@@ -20,7 +20,8 @@ package
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextField;
-	
+	import starling.utils.deg2rad;
+	import starling.core.Starling;
 	/**
 	 * ...
 	 * @author Vendrie
@@ -38,6 +39,8 @@ package
 		private var assetsManager:AssetManager;
 		
 		private var wood:Image;
+		private var _rotationInDegrees:Number = 0;
+		private var woodObject : DisplayObject;
 
 		public function Game()
 		{
@@ -48,74 +51,73 @@ package
 			assetsManager.enqueue(appDir.resolvePath("image"));
 
 			assetsManager.loadQueue(startGame);
-			//addEventListener(Event.ADDED_TO_STAGE, onAdded);
+			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
+
 		}
 		
 		private function startGame():void
 		{
+			//wood = new Image(assetsManager.getTexture("wood"));
+			//wood.width = 200;
+			//wood.height = 200;
+			//
+			//s = new Sprite();
+			//s.x = 490;
+			//s.y = 120;
+			//s.addChild(wood);
+			//this.rotationInDegrees = 0;
+			//Starling.juggler.tween(this, 10, {rotationInDegrees:100});
+			//addChild(s);
+			
 			//this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
-			this.addEventListener(EnterFrameEvent.ENTER_FRAME, onAdded);
+			this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
 		
-		private function onAdded(e:EnterFrameEvent):void
+		private function onAdded(e:Event):void
 		{
 			
-			resetColors();
 			//knife = new Image(assetsManager.getTexture("knife"));
+			//s = new Sprite();
+			//s.addChild(wood);
+			////s.pivotX = s.width >> 1;
+			////s.pivotY = s.height >> 1;
+			////s.x = 490;
+			////s.y = 120;
+			//s.rotation = 10;
+			////s.rotation = deg2rad(s.rotation * Math.PI / 180);
+
+			////s.x = (this.stage.width * Math.PI / 180);
+			////s.y = (this.stage.height * Math.PI / 180);
 			
-			wood = new Image(assetsManager.getTexture("wood"));
-			wood.width = 200;
-			wood.height = 200;
-			//q = new Quad(200, 200);
+			////s.x = (stage.stageWidth - s.width >> 1) + (s.width >> 1);
+			////s.y = (stage.stageHeight - s.height >> 1) + (s.height >> 1);
+			
+			
+			q = new Quad(200, 200);
 			s = new Sprite();
-			//var legend:TextField = new TextField(120, 20, "Hello Starling!");
-			
-			//legend.style.=
-			s.addChild(wood);
-			//s.addChild(legend);
-			//s.pivotX = 10;
-			//s.pivotY = 10;
+			s.addChild(q);
 			s.pivotX = s.width >> 1;
 			s.pivotY = s.height >> 1;
-		
-			s.x = (this.stage.width * Math.PI / 180);
-			s.y = (this.stage.height * Math.PI / 180);
-			
-			//s.x = (stage.stageWidth - s.width >> 1) + (s.width >> 1);
-			//s.y = (stage.stageHeight - s.height >> 1) + (s.height >> 1);
+			s.x = (stage.stageWidth - s.width >> 1 ) + (s.width >> 1);
+			s.y = (stage.stageHeight - s.height >> 1) + (s.height >> 1);
 			addChild(s);
 			
-			r -= (r - rDest) * .01;
-			g -= (g - gDest) * .01;
-			b -= (b - bDest) * .01;
-			var color:uint = r << 16 | g << 8 | b;
-			//q.color = color;
+			s.addEventListener(Event.ENTER_FRAME, onFrame);
 			// when reaching the color, pick another one
-			if (Math.abs(r - rDest) < 1 && Math.abs(g - gDest) < 1 && Math.abs(b - bDest)) resetColors();
-			(e.currentTarget as DisplayObject).rotation += 0.3 * Math.PI / 90;
-			//(e.currentTarget as DisplayObject).width  = 200;
-			//(e.currentTarget as DisplayObject).height = 200;
-			//s.addEventListener(Event.ENTER_FRAME, onFrame);
 		}
 		
-		//private function onFrame(e:EnterFrameEvent):void
-		//{
-			//r -= (r - rDest) * .01;
-			//g -= (g - gDest) * .01;
-			//b -= (b - bDest) * .01;
-			//var color:uint = r << 16 | g << 8 | b;
-			//q.color = color;
-			//// when reaching the color, pick another one
-			//if (Math.abs(r - rDest) < 1 && Math.abs(g - gDest) < 1 && Math.abs(b - bDest)) resetColors();
-			//(e.currentTarget as DisplayObject).rotation += .03;
-		//}
-		
-		private function resetColors():void
+		private function onFrame(e:Event):void
 		{
-			rDest = Math.random() * 255;
-			gDest = Math.random() * 255;
-			bDest = Math.random() * 255;
+			(e.currentTarget as DisplayObject).rotation += 0.1;
 		}
+		
+
+		//public function get rotationInDegrees():Number { return _rotationInDegrees;}
+		//public function set rotationInDegrees(value:Number):void
+		//{
+			//_rotationInDegrees = value;
+			//s.rotation = deg2rad(_rotationInDegrees);
+		//}
 	
 		////private var startAngle = 2 * Math.PI;
 		////private var endAngle = Math.PI * 2; //Welcome to my knife hit
