@@ -4,11 +4,11 @@ package
 	import flash.ui.Keyboard;
 	import starling.assets.AssetManager;
 	
-	//import starling.display.Canvas;
+	import starling.display.Canvas;
 	import starling.display.Image;
 	//import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
-	//import starling.events.KeyboardEvent;
+	import starling.events.KeyboardEvent;
 	//import starling.text.TextField;
 	//
 	//import starling.rendering.VertexData;
@@ -20,6 +20,11 @@ package
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextField;
+	import starling.utils.deg2rad;
+	import starling.core.Starling;
+	
+	import starling.textures.Texture;
+	import flash.display.Bitmap;
 	
 	/**
 	 * ...
@@ -38,84 +43,204 @@ package
 		private var assetsManager:AssetManager;
 		
 		private var wood:Image;
+		private var knife:Image;
+		private var speedUp:int;
+		private var GameOverText:TextField;
+		private var hit:Boolean = false;
+		private var _rotationInDegrees:Number = 0;
+		
+		private var canvas : Canvas = new Canvas();
+		
+		[Embed(source="../bin/image/wood.png")]
+		public static const woodClass:Class;
+		
+		[Embed(source="../bin/image/knife.png")]
+		public static const knifeClass:Class;
 
 		public function Game()
 		{
 			var appDir:File = File.applicationDirectory;
 			//SET ASSETS MANAGER
-
 			assetsManager = new AssetManager();
 			assetsManager.enqueue(appDir.resolvePath("image"));
-
 			assetsManager.loadQueue(startGame);
-			//addEventListener(Event.ADDED_TO_STAGE, onAdded);
+			////this.addEventListener(Event.ADDED_TO_STAGE, onAdded);
+			//this.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
+			//this.addEventListener(EnterFrameEvent.ENTER_FRAME, onAdded);
 		}
 		
 		private function startGame():void
 		{
-			//this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
+			var bmpWood:Bitmap = new woodClass();
+			var texWood:Texture = Texture.fromBitmap(bmpWood);
+			wood = new Image(texWood);		
+			
+			//wood = new Image(assetsManager.getTexture("wood"));
+			wood.width = 200;
+			wood.height = 200;
+			
+			s = new Sprite();
+			s.addChild(wood);
+			
+			s.pivotX = s.width >> 1;
+			s.pivotY = s.height >> 1;
+			s.x = (stage.stageWidth - s.width >> 1 ) + (s.width >> 1);
+			s.y = 100;
+			
+			
+			var hitKnife: Array = [1, 2, 3]
+			var currentAngle : int = 0;
+			var startAngle : int = 2 * Math.PI;
+
+			for (var i:String  in hitKnife)
+			{
+				var bmpKnife:Bitmap = new knifeClass();
+				var texKnife:Texture = Texture.fromBitmap(bmpKnife);
+				knife = new Image(texKnife);
+				knife.pivotY = knife.height;
+				knife.height = 120;
+				knife.width = 80;
+				knife.x = 100;
+				knife.y = 250;
+				//knife.rotation = startAngle + currentAngle + Math.PI * 2;
+				
+				//currentAngle += Math.PI / 180;
+				//knife.rotation = 2 * Math.PI / maxKnife.length;
+				//knife.rotation = deg2rad(20);
+				//250 
+				s.addChild(knife);
+			}
+
+			addChild(s);
+			
+
+			//addChild(knife);
+			// game
+			if (hit == true)
+			{
+				knife.y -= speedUp;
+				if (knife.y >= 601)
+				{
+					hit = false;
+				}
+			}
+			s.addEventListener(Event.ENTER_FRAME, onFrame);
+			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, pressKeyboard);
 			this.addEventListener(EnterFrameEvent.ENTER_FRAME, onAdded);
+			//var canvas:Canvas = new Canvas();
+			//canvas.beginFill(0xff0000);
+			//canvas.drawCircle(490, 100, 45);
+			//canvas.drawCircle(420, 60, 45);
+			//canvas.endFill();
+			//addChild(canvas);
 		}
 		
 		private function onAdded(e:EnterFrameEvent):void
 		{
+			//GameOverText = new TextField((this.stage.width / 2), (this.stage.height / 2));
+			//addChild(GameOverText);
 			
-			resetColors();
+			
+			//var bmpWood:Bitmap = new woodClass();
+			//var texWood:Texture = Texture.fromBitmap(bmpWood);
+			//wood = new Image(texWood);		
+			//
+			////wood = new Image(assetsManager.getTexture("wood"));
+			//wood.width = 200;
+			//wood.height = 200;
+			//
+			//s = new Sprite();
+			//s.addChild(wood);
+			//
+			//s.pivotX = s.width >> 1;
+			//s.pivotY = s.height >> 1;
+			//s.x = (stage.stageWidth - s.width >> 1 ) + (s.width >> 1);
+			//s.y = 100;
+			//addChild(s);
+			
+			//var bmpKnife:Bitmap = new knifeClass();
+			//var texKnife:Texture = Texture.fromBitmap(bmpKnife);
+			//knife = new Image(texKnife);
 			//knife = new Image(assetsManager.getTexture("knife"));
+			//
+			//knife.pivotY = knife.height;
+			//knife.height = 120;
+			//knife.width = 80;
+			//knife.x = 450;
+			//knife.y = 600;
+//
+			//addChild(knife);
+			//// game
+			//if (hit == true)
+			//{
+				//knife.y -= speedUp;
+				//if (knife.y >= 601)
+				//{
+					//hit = false;
+				//}
+			//}
+
+			//if (s.bounds.intersects(knife.bounds) == true || s.y >= 450){
+				//GameOverText.text = "Game Over";
+				//this.stage.starling.stop();
+			//}
 			
-			wood = new Image(assetsManager.getTexture("wood"));
-			wood.width = 200;
-			wood.height = 200;
-			//q = new Quad(200, 200);
-			s = new Sprite();
-			//var legend:TextField = new TextField(120, 20, "Hello Starling!");
-			
-			//legend.style.=
-			s.addChild(wood);
-			//s.addChild(legend);
-			//s.pivotX = 10;
-			//s.pivotY = 10;
-			s.pivotX = s.width >> 1;
-			s.pivotY = s.height >> 1;
-		
-			s.x = (this.stage.width * Math.PI / 180);
-			s.y = (this.stage.height * Math.PI / 180);
-			
-			//s.x = (stage.stageWidth - s.width >> 1) + (s.width >> 1);
-			//s.y = (stage.stageHeight - s.height >> 1) + (s.height >> 1);
-			addChild(s);
-			
-			r -= (r - rDest) * .01;
-			g -= (g - gDest) * .01;
-			b -= (b - bDest) * .01;
-			var color:uint = r << 16 | g << 8 | b;
-			//q.color = color;
-			// when reaching the color, pick another one
-			if (Math.abs(r - rDest) < 1 && Math.abs(g - gDest) < 1 && Math.abs(b - bDest)) resetColors();
-			(e.currentTarget as DisplayObject).rotation += 0.3 * Math.PI / 90;
-			//(e.currentTarget as DisplayObject).width  = 200;
-			//(e.currentTarget as DisplayObject).height = 200;
 			//s.addEventListener(Event.ENTER_FRAME, onFrame);
+			//addEventListener(EnterFrameEvent.ENTER_FRAME, enterFrame);
 		}
 		
-		//private function onFrame(e:EnterFrameEvent):void
+		private function onFrame(e:Event):void
+		{
+			(e.currentTarget as DisplayObject).rotation += 0.8 * Math.PI / 90;
+		}
+		
+		//private function enterFrame(e:EnterFrameEvent):void
 		//{
-			//r -= (r - rDest) * .01;
-			//g -= (g - gDest) * .01;
-			//b -= (b - bDest) * .01;
-			//var color:uint = r << 16 | g << 8 | b;
-			//q.color = color;
-			//// when reaching the color, pick another one
-			//if (Math.abs(r - rDest) < 1 && Math.abs(g - gDest) < 1 && Math.abs(b - bDest)) resetColors();
-			//(e.currentTarget as DisplayObject).rotation += .03;
+			//var bmpKnife:Bitmap = new knifeClass();
+			//var texKnife:Texture = Texture.fromBitmap(bmpKnife);
+			//knife = new Image(texKnife);
+			//
+			//knife.pivotY = knife.height;
+			//knife.height = 120;
+			//knife.width = 80;
+			//knife.x = 450;
+			//knife.y = 600;
+			//addChild(knife);
+			//// game
+			//if (hit == true)
+			//{
+				//knife.y -= speedUp;
+				//trace(knife.y);
+				//if (knife.y >= 601)
+				//{
+					//hit = false;
+				//}
+				//knife.y -= speedUp;
+			//}
+			//
+			//if (s.bounds.intersects(knife.bounds) == true || s.y >= 450){
+				//GameOverText.text = "Game Over";
+				//this.stage.starling.stop();
+			//}
 		//}
 		
-		private function resetColors():void
+		private function pressKeyboard(e:KeyboardEvent):void
 		{
-			rDest = Math.random() * 255;
-			gDest = Math.random() * 255;
-			bDest = Math.random() * 255;
+			trace("press up");
+			if (hit == true) return;
+			if (e.keyCode == Keyboard.UP)
+			{
+				hit = true;
+				speedUp = 20;
+			}
 		}
+		
+		//public function get rotationInDegrees():Number { return _rotationInDegrees;}
+		//public function set rotationInDegrees(value:Number):void
+		//{
+			//_rotationInDegrees = value;
+			//s.rotation = deg2rad(_rotationInDegrees);
+		//}
 	
 		////private var startAngle = 2 * Math.PI;
 		////private var endAngle = Math.PI * 2; //Welcome to my knife hit
