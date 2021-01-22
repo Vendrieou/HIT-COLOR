@@ -44,6 +44,7 @@ package
 		
 		private var wood:Image;
 		private var knife:Image;
+		private var knife1:Image;
 		private var speedUp:int;
 		private var GameOverText:TextField;
 		private var hit:Boolean = false;
@@ -113,13 +114,21 @@ package
 
 			addChild(s);
 			
-
-			//addChild(knife);
-			// game
+		
+				var bmpKnife1:Bitmap = new knifeClass();
+				var texKnife1:Texture = Texture.fromBitmap(bmpKnife1);
+				knife1 = new Image(texKnife);
+				knife1.pivotY = knife.height;
+				knife1.height = 120;
+				knife1.width = 80;
+				knife1.x = 490;
+				knife1.y = 560;
+				addChild(knife1);
+			// game throw knife
 			if (hit == true)
 			{
-				knife.y -= speedUp;
-				if (knife.y >= 601)
+				knife1.y -= speedUp;
+				if (knife1.y >= 601)
 				{
 					hit = false;
 				}
@@ -184,7 +193,6 @@ package
 				//GameOverText.text = "Game Over";
 				//this.stage.starling.stop();
 			//}
-			
 			//s.addEventListener(Event.ENTER_FRAME, onFrame);
 			//addEventListener(EnterFrameEvent.ENTER_FRAME, enterFrame);
 		}
